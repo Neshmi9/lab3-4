@@ -1,8 +1,8 @@
 pipeline {
-    agent any 
+    agent any
 
     environment {
-        DOCKER_IMAGE = 'cithit/alhayen'  // Replace 'alhayen' with your Miami ID if different
+        DOCKER_IMAGE = 'cithit/alhayen'
         IMAGE_TAG = "build-${BUILD_NUMBER}"
         GITHUB_URL = 'https://github.com/Neshmi9/lab3-4.git'
     }
@@ -10,7 +10,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/main']],
                           userRemoteConfigs: [[url: "${GITHUB_URL}"]]])
             }
         }
@@ -32,42 +33,43 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                echo 'Skipping Docker push (no credentials configured)'
+                echo 'Skipping Docker push (not configured)'
             }
         }
 
         stage('Deploy to Dev Environment') {
             steps {
-                echo 'Skipping Dev deployment (Kubernetes disabled for this lab)'
+                echo 'Skipping Dev deploy (not required)'
             }
         }
 
         stage('Deploy to Prod Environment') {
             steps {
-                echo 'Skipping Prod deployment (Kubernetes disabled for this lab)'
+                echo 'Skipping Prod deploy (not required)'
             }
         }
 
         stage('Check Kubernetes Cluster') {
             steps {
-                echo 'Skipping Kubernetes checks (not required)'
+                echo 'Skipping Kubernetes check'
             }
         }
     }
 
-post {
-    success {
-        slackSend (
-            channel: '#builds',
-            color: 'good',
-            message: "✅ Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-        )
-    }
-    failure {
-        slackSend (
-            channel: '#builds',
-            color: 'danger',
-            message: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-        )
+    post {
+        success {
+            slackSend (
+                channel: '#builds',
+                color: 'good',
+                message: "✅ Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            )
+        }
+        failure {
+            slackSend (
+                channel: '#builds',
+                color: 'danger',
+                message: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            )
+        }
     }
 }
