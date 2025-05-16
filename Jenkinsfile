@@ -55,17 +55,19 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            echo "✅ Build Completed Successfully"
-        }
-
-        unstable {
-            echo "⚠️ Build Unstable"
-        }
-
-        failure {
-            echo "❌ Build Failed"
-        }
+post {
+    success {
+        slackSend (
+            webhookUrl: credentials('slack-webhook'),
+            message: "✅ Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            color: '#36a64f'
+        )
+    }
+    failure {
+        slackSend (
+            webhookUrl: credentials('slack-webhook'),
+            message: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            color: '#ff0000'
+        )
     }
 }
