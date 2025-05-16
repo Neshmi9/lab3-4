@@ -55,19 +55,20 @@ pipeline {
         }
     }
 
-post {
-    success {
-        slackSend (
-            webhookUrl: credentials('slack-webhook'),
-            message: "✅ Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            color: '#36a64f'
-        )
-    }
-    failure {
-        slackSend (
-            webhookUrl: credentials('slack-webhook'),
-            message: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            color: '#ff0000'
-        )
+    post {
+        success {
+            slackSend (
+                webhookUrl: credentials('slack-webhook'),
+                message: "✅ Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                color: '#36a64f'
+            )
+        }
+        failure {
+            slackSend (
+                webhookUrl: credentials('slack-webhook'),
+                message: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                color: '#ff0000'
+            )
+        }
     }
 }
